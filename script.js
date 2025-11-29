@@ -1,4 +1,4 @@
-// Tu juego de Scratch
+// Lista de juegos de Scratch (solo tu juego por ahora)
 const juegos = [
     "https://scratch.mit.edu/projects/1190684640/embed"
 ];
@@ -6,12 +6,10 @@ const juegos = [
 // Contenedor donde se insertará el juego
 const contenedor = document.getElementById("juegos-container");
 
-// Crear el iframe dinámicamente
+// Crear los iframes dinámicamente
 juegos.forEach(url => {
     const iframe = document.createElement("iframe");
     iframe.src = url;
-    iframe.width = "485";
-    iframe.height = "402";
     iframe.allowTransparency = true;
     iframe.frameBorder = "0";
     iframe.scrolling = "no";
@@ -19,4 +17,3 @@ juegos.forEach(url => {
 
     contenedor.appendChild(iframe);
 });
-
