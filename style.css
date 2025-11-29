@@ -1,15 +1,24 @@
-/* Estilo general */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f0f0f0;
-    padding-top: 70px; /* espacio para el logo */
+    padding-top: 100px;
 }
 
-/* Título con efecto RGB animado */
+#logo {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 120px;
+    height: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
 h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: bold;
+    margin-bottom: 40px;
     background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
     background-size: 400% 400%;
     -webkit-background-clip: text;
@@ -17,46 +26,40 @@ h1 {
     animation: rainbow 5s linear infinite;
 }
 
-/* Animación del gradiente */
 @keyframes rainbow {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* Logo grande en la esquina, siempre visible */
-#logo {
-    position: fixed;   /* se mantiene en la esquina */
-    top: 10px;         
-    left: 10px;        
-    width: 120px;      /* grande tanto en móvil como en PC */
-    height: auto;
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+/* Botones de juegos */
+.botones-juegos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
-/* Logo aún más grande en pantallas grandes */
-@media (min-width: 1024px) {
-    #logo {
-        width: 150px;
-    }
-}
-
-/* Estilo de los iframes de juegos */
-iframe {
-    display: block;
-    margin: 20px auto;
-    border: 2px solid #4CAF50;
+.boton-juego {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px 40px;
+    text-decoration: none;
+    font-size: 1.2rem;
     border-radius: 10px;
-    width: 90%;       /* ancho adaptable */
-    max-width: 485px; /* ancho máximo */
-    height: 270px;    /* altura proporcional */
+    transition: transform 0.2s, background-color 0.2s;
 }
 
-/* Ajuste del título en móviles */
+.boton-juego:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+
 @media (max-width: 480px) {
-    h1 {
-        font-size: 1.4rem;
+    .boton-juego {
+        padding: 15px 25px;
+        font-size: 1rem;
     }
 }
 
