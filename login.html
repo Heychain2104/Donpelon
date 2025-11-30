@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión</title>
+<link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <img src="logo.png" alt="Logo" id="logo">
-    <h1>Iniciar Sesión</h1>
 
-    <form id="form-login">
-        <input type="text" id="login-username" placeholder="Usuario" required><br><br>
-        <input type="password" id="login-password" placeholder="Contraseña" required><br><br>
-        <button type="submit">Entrar</button>
-    </form>
+<div class="contenedor">
 
-    <p>¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+    <!-- LOGIN -->
+    <div id="login-box" class="caja activa">
+        <h2>Iniciar Sesión</h2>
 
-    <script src="script.js"></script>
+        <input type="text" id="login-usuario" placeholder="Usuario">
+        <input type="password" id="login-pass" placeholder="Contraseña">
+
+        <button onclick="login()">Entrar</button>
+
+        <p class="link" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</p>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="registro-box" class="caja">
+        <h2>Registro</h2>
+
+        <input type="text" id="reg-usuario" placeholder="Usuario">
+        <input type="password" id="reg-pass" placeholder="Contraseña">
+
+        <label class="texto">Foto de perfil:</label>
+        <input type="file" id="reg-foto">
+
+        <button onclick="registrar()">Crear cuenta</button>
+
+        <p class="link" onclick="mostrarLogin()">¿Ya tienes cuenta? Inicia sesión</p>
+    </div>
+
+</div>
+
+<script src="login.js"></script>
 </body>
 </html>
