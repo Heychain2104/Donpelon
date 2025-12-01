@@ -1,96 +1,65 @@
-/* ============================================================
-   SISTEMA LOGIN / REGISTRO / SESIÓN
-   ============================================================ */
+/* ============================
+      SISTEMA DE USUARIOS
+   ============================ */
 
-// Verificar si la página NO es login.html o register.html
-let pagina = window.location.pathname;
-
-if (!pagina.includes("login") && !pagina.includes("register")) {
-    let id = localStorage.getItem("sesion");
-    if (!id) window.location.href = "login.html";
-}
-
-
-/* ------------------------------
-   REGISTRO
------------------------------- */
-
-function registrar() {
-    const nombre = document.getElementById("reg-nombre").value.trim();
+// Registrar usuario nuevo
+function registrarUsuario() {
     const usuario = document.getElementById("reg-usuario").value.trim();
     const pass = document.getElementById("reg-pass").value.trim();
-    const foto = document.getElementById("reg-foto").files[0];
+    const foto = document.getElementById("reg-foto").value.trim() || "default.png";
 
-    if (!nombre || !usuario || !pass) {
+    if (usuario === "" || pass === "") {
         shake("register-box");
         return;
     }
 
-    // Comprobar usuario repetido
     if (localStorage.getItem("user_" + usuario)) {
-        alert("Ese usuario ya existe");
-        shake("register-box");
+        alert("Ese nombre de usuario ya existe.");
         return;
     }
 
-    // Convertir imagen a Base64
-    if (foto) {
-        let reader = new FileReader();
-        reader.onload = function (e) {
-            guardarUsuario(nombre, usuario, pass, e.target.result);
-        };
-        reader.readAsDataURL(foto);
-    } else {
-        guardarUsuario(nombre, usuario, pass, "default.png");
-    }
-}
-
-function guardarUsuario(nombre, usuario, pass, foto) {
     const datos = {
-        nombre: nombre,
-        usuario: usuario,
+        nombre: usuario,
         pass: pass,
         foto: foto,
         puntos: 0
     };
 
     localStorage.setItem("user_" + usuario, JSON.stringify(datos));
-    alert("Registrado correctamente");
-    window.location.href = "login.html";
+
+    alert("Usuario registrado correctamente.");
+    mostrarLogin();
 }
 
 
-/* ------------------------------
-   LOGIN
------------------------------- */
 
-function iniciarSesion() {
+// Iniciar sesión
+function loginUsuario() {
     const usuario = document.getElementById("log-usuario").value.trim();
     const pass = document.getElementById("log-pass").value.trim();
 
-    let datos = localStorage.getItem("user_" + usuario);
-    if (!datos) {
+    const datos = JSON.parse(localStorage.getItem("user_" + usuario));
+
+    if (!datos || datos.pass !== pass) {
         shake("login-box");
         return;
     }
 
-    datos = JSON.parse(datos);
-
-    if (datos.pass !== pass) {
-        shake("login-box");
-        return;
-    }
-
-    // Guardar sesión
     localStorage.setItem("sesion", usuario);
     window.location.href = "index.html";
 }
 
 
-/* ------------------------------
-   CARGAR PANEL USUARIO ARRIBA
------------------------------- */
 
+// Cerrar sesión
+function logoutUsuario() {
+    localStorage.removeItem("sesion");
+    window.location.href = "login.html";
+}
+
+
+
+// Cargar usuario en el panel superior del index
 function cargarUsuarioActual() {
     const usuarioId = localStorage.getItem("sesion");
     if (!usuarioId) return;
@@ -104,54 +73,116 @@ function cargarUsuarioActual() {
     document.getElementById("user-foto").src = data.foto;
 }
 
-cargarUsuarioActual();
 
 
-/* ------------------------------
-   MENÚ USUARIO DESPLEGABLE
------------------------------- */
-
-function toggleUserMenu() {
-    const menu = document.getElementById("user-menu");
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}
-
-function cerrarSesion() {
-    localStorage.removeItem("sesion");
-    window.location.href = "login.html";
-}
-
-function abrirPerfil() {
-    alert("Aquí pondremos una página de perfil!");
-}
-
-
-/* ------------------------------
-   SISTEMA DE PUNTOS AUTOMÁTICO
------------------------------- */
-
+// Sumar puntos automáticamente cada 30 segundos
 setInterval(() => {
-    let usuarioId = localStorage.getItem("sesion");
+    const usuarioId = localStorage.getItem("sesion");
     if (!usuarioId) return;
 
     let data = JSON.parse(localStorage.getItem("user_" + usuarioId));
-    data.puntos++;
+    data.puntos += 1;
     localStorage.setItem("user_" + usuarioId, JSON.stringify(data));
 
     if (document.getElementById("user-puntos")) {
         document.getElementById("user-puntos").textContent = "⭐ " + data.puntos;
     }
+}, 30000);
 
-}, 10000);
 
 
-/* ------------------------------
-   EFECTO SHAKE
------------------------------- */
 
+/* ============================
+       INTERFAZ LOGIN/REGISTRO
+   ============================ */
+
+// Mostrar login
+function mostrarLogin() {
+    document.getElementById("login-box").style.display = "block";
+    document.getElementById("register-box").style.display = "none";
+}
+
+// Mostrar registro
+function mostrarRegistro() {
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("register-box").style.display = "block";
+}
+
+
+
+// Animación de shake
 function shake(id) {
-    const el = document.getElementById(id);
-    el.classList.add("shake");
+    const box = document.getElementById(id);
+    box.classList.add("shake");
 
     setTimeout(() => {
-       
+        box.classList.remove("shake");
+    }, 500);
+}
+
+
+
+/* ============================
+       ANIMACIÓN DE PARTÍCULAS
+   ============================ */
+
+const canvas = document.getElementById("fondo");
+if (canvas) {
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particulas = [];
+    for (let i = 0; i < 100; i++) {
+        particulas.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 3 + 1,
+            dx: Math.random() * 2 - 1,
+            dy: Math.random() * 2 - 1,
+        });
+    }
+
+    function animar() {
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particulas.forEach((p) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = "white";
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        });
+
+        requestAnimationFrame(animar);
+    }
+
+    animar();
+
+    window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+}
+
+
+
+/* ============================
+         TÍTULO RGB
+   ============================ */
+
+const titulo = document.getElementById("titulo");
+
+if (titulo) {
+    let hue = 0;
+    setInterval(() => {
+        titulo.style.color = `hsl(${hue}, 100%, 50%)`;
+        hue = (hue + 1) % 360;
+    }, 50);
+}
