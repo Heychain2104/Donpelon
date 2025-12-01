@@ -31,8 +31,6 @@ function registrarUsuario() {
     mostrarLogin();
 }
 
-
-
 // Iniciar sesión
 function loginUsuario() {
     const usuario = document.getElementById("log-usuario").value.trim();
@@ -49,15 +47,11 @@ function loginUsuario() {
     window.location.href = "index.html";
 }
 
-
-
 // Cerrar sesión
 function logoutUsuario() {
     localStorage.removeItem("sesion");
     window.location.href = "login.html";
 }
-
-
 
 // Cargar usuario en el panel superior del index
 function cargarUsuarioActual() {
@@ -65,7 +59,6 @@ function cargarUsuarioActual() {
     if (!usuarioId) return;
 
     const data = JSON.parse(localStorage.getItem("user_" + usuarioId));
-
     if (!document.getElementById("user-nombre")) return;
 
     document.getElementById("user-nombre").textContent = data.nombre;
@@ -73,9 +66,37 @@ function cargarUsuarioActual() {
     document.getElementById("user-foto").src = data.foto;
 }
 
+/* ============================
+   🆕 ACTUALIZACIÓN AUTOMÁTICA AVATAR
+   ============================ */
 
+document.addEventListener("DOMContentLoaded", () => {
+    const usuarioId = localStorage.getItem("sesion");
+    if (!usuarioId) return;
+    let data = JSON.parse(localStorage.getItem("user_" + usuarioId));
 
-// Sumar puntos automáticamente cada 30 segundos
+    const avatarInput = document.getElementById("foto");
+    const avatarImg = document.getElementById("user-foto");
+
+    if (avatarInput && avatarImg) {
+        avatarInput.addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                data.foto = reader.result;
+                avatarImg.src = reader.result; // Actualiza panel superior
+                localStorage.setItem("user_" + usuarioId, JSON.stringify(data));
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
+
+/* ============================
+       SUMAR PUNTOS AUTOMÁTICOS
+   ============================ */
+
 setInterval(() => {
     const usuarioId = localStorage.getItem("sesion");
     if (!usuarioId) return;
@@ -89,38 +110,25 @@ setInterval(() => {
     }
 }, 30000);
 
-
-
-
 /* ============================
        INTERFAZ LOGIN/REGISTRO
    ============================ */
 
-// Mostrar login
 function mostrarLogin() {
     document.getElementById("login-box").style.display = "block";
     document.getElementById("register-box").style.display = "none";
 }
 
-// Mostrar registro
 function mostrarRegistro() {
     document.getElementById("login-box").style.display = "none";
     document.getElementById("register-box").style.display = "block";
 }
 
-
-
-// Animación de shake
 function shake(id) {
     const box = document.getElementById(id);
     box.classList.add("shake");
-
-    setTimeout(() => {
-        box.classList.remove("shake");
-    }, 500);
+    setTimeout(() => box.classList.remove("shake"), 500);
 }
-
-
 
 /* ============================
        ANIMACIÓN DE PARTÍCULAS
@@ -171,14 +179,11 @@ if (canvas) {
     });
 }
 
-
-
 /* ============================
          TÍTULO RGB
    ============================ */
 
 const titulo = document.getElementById("titulo");
-
 if (titulo) {
     let hue = 0;
     setInterval(() => {
