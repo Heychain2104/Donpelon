@@ -1,57 +1,31 @@
-Index.html
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Página de Juegos</title>
+
 <link rel="stylesheet" href="style.css">
-<style>
-body { background:black; color:white; font-family:Arial, sans-serif; margin:0; padding:0; text-align:center; }
-#logo { position: fixed; top:10px; left:10px; width:120px; z-index:10; }
-#titulo { margin-top:20px; font-size:2em; }
-
-/* Contenedor juegos con Grid 6 columnas */
-.juegos {
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:20px;
-    justify-items:center;
-    margin-top:20px;
-    padding:0 10px;
-}
-.juegos img.miniatura {
-    width:200px;
-    height:auto;
-    cursor:pointer;
-    border:2px solid white;
-    border-radius:10px;
-    transition:transform 0.2s;
-}
-.juegos img.miniatura:hover { transform:scale(1.1); }
-canvas#fondo { position:fixed; top:0; left:0; z-index:-1; }
-
-/* Responsive */
-@media(max-width:1200px){.juegos{grid-template-columns:repeat(4,1fr);} }
-@media(max-width:800px){ .juegos{grid-template-columns:repeat(2,1fr);} }
-@media(max-width:500px){ .juegos{grid-template-columns:1fr;} }
-</style>
-
-<!-- 🔒 PROTECCIÓN: SI NO HAY SESIÓN → LOGIN -->
-<script>
-if (!localStorage.getItem("sesion")) {
-    window.location.href = "login.html";
-}
-</script>
-
 </head>
 <body>
 
+<!-- FONDO ANIMADO -->
 <canvas id="fondo"></canvas>
+
+<!-- LOGO -->
 <img src="logo.png" alt="Logo" id="logo">
+
+<!-- PANEL DE USUARIO -->
+<div id="user-panel">
+    <img id="user-foto" src="default.png" alt="Foto">
+    <span id="user-nombre"></span>
+    <span id="user-puntos"></span>
+</div>
+
+<!-- TÍTULO RGB -->
 <h1 id="titulo">Bienvenido a mi página de juegos</h1>
 
+<!-- LISTA DE JUEGOS -->
 <div class="juegos">
     <a href="scratch-juego1.html"><img src="thumb-scratch1.png" class="miniatura" alt="Scratch 1"></a>
     <a href="scratch-juego2.html"><img src="thumb-scratch2.png" class="miniatura" alt="Scratch 2"></a>
@@ -73,65 +47,16 @@ if (!localStorage.getItem("sesion")) {
     <a href="Parking.html"><img src="Parking.png" class="miniatura" alt="Parking"></a>
     <a href="fire.html"><img src="fire.png" class="miniatura" alt="Fire"></a>
     <a href="hole.html"><img src="hole.png" class="miniatura" alt="Hole"></a>
-    <a href="foot.html"><img src="foot.png" class="miniatura" alt="Foot"></a>
-    <a href="volleyball.html"><img src="volleyball.png" class="miniatura" alt="Voleyball Random"></a>
-    <a href="Geometry.html"><img src="Geometry.png" class="miniatura" alt="Geometry Dash"></a>
-    <a href="Haunted-House.html"><img src="deathchase.png" class="miniatura" alt="Haunted House"></a>
-    <a href="boxing.html"><img src="boxing.png" class="miniatura" alt="Haunted House"></a>
-    <a href="Drift.html"><img src="Drift.png" class="miniatura" alt="Haunted House"></a>
-    <a href="rooftop-snipers.html"><img src="rooftop-snipers.png" class="miniatura" alt="Haunted House"></a>
-    <a href="StreetRace.html"><img src="StreetRace.png" class="miniatura" alt="Haunted House"></a>
-    <a href="brainrot.html"><img src="brainrott.png" class="miniatura" alt="Haunted House"></a>
-    <a href="MadalinMultiplayer.html"><img src="MadalinMultiplayer.png" class="miniatura" alt="Haunted House"></a>
+    <a href="foot.html"><img src="foot.png" class="miniatura" alt="Foot Game"></a>
+    <a href="volleyball.html"><img src="volleyball.png" class="miniatura" alt="Volleyball Random"></a>
+    <a href="Geometry.html"><img src="Geometry.png" class="miniatura" alt="Geometry"></a>
+    <a href="Haunted-House.html"><img src="haunted-house.png" class="miniatura" alt="Haunted House"></a>
 </div>
 
+<script src="scripts.js"></script>
 <script>
-// Título RGB animado
-const titulo = document.getElementById("titulo");
-let hue=0;
-setInterval(()=>{
-    titulo.style.color=`hsl(${hue},100%,50%)`;
-    hue=(hue+1)%360;
-},50);
-
-// Fondo partículas
-const canvas=document.getElementById("fondo");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth; canvas.height=window.innerHeight;
-const particulas=[];
-for(let i=0;i<100;i++){
-    particulas.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*3+1,
-        dx:Math.random()*2-1,
-        dy:Math.random()*2-1
-    });
-}
-function animar(){
-    ctx.fillStyle="rgba(0,0,0,0.2)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    particulas.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle="white";
-        ctx.fill();
-        p.x+=p.dx; p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width)p.dx*=-1;
-        if(p.y<0||p.y>canvas.height)p.dy*=-1;
-    });
-    requestAnimationFrame(animar);
-}
-animar();
-window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
-
-// ⭐ SISTEMA DE PUNTOS
-let user = localStorage.getItem("sesion");
-if (user) {
-    let data = JSON.parse(localStorage.getItem("user_" + user));
-    data.puntos++;
-    localStorage.setItem("user_" + user, JSON.stringify(data));
-}
+    // Cargar usuario automáticamente al abrir el index
+    cargarUsuarioActual();
 </script>
 
 </body>
